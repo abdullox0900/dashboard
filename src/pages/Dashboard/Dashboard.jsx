@@ -3,7 +3,7 @@ import useHeaderTitle from "../../hooks/useHeaderTitle";
 
 function Dashboard() {
   
-  const {setText} = useHeaderTitle()
+  const {text, setText} = useHeaderTitle()
 
   setText('Dashboard')
 

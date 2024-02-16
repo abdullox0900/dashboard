@@ -8,8 +8,6 @@ function Weather() {
 
    let date = new Date()
 
-   console.log();
-
   return (
     <>
         <div className="w-[400px] 
@@ -23,13 +21,13 @@ function Weather() {
                  <span className="text-[22px] text-white font-medium">{`${date.getDate()}-${date.getMonth()}-${date.getFullYear()} `}</span>
                  <span className="text-[22px] text-white font-medium">
                     <ion-icon name="location-outline"></ion-icon>
-                    {weather.name}
+                    {weather?.name}
                  </span>
             </div>
             <div className="flex flex-col absolute bottom-[60px] z-10">
                 <ion-icon name="sunny-outline" style={{fontSize: '70px', color: 'white'}}></ion-icon>
-                <span className="text-[50px] text-white font-semibold">{weather.main.temp} °C</span>
-                <span className="text-[30px] text-white">{weather.weather[0].main}</span>
+                <span className="text-[50px] text-white font-semibold">{weather?.main.temp} °C</span>
+                <span className="text-[30px] text-white">{weather?.weather[0].main}</span>
             </div>
             <div>
 

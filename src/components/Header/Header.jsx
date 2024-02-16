@@ -32,7 +32,7 @@ function Header() {
             ]}
           />
 
-          <span className="mt-[5px] font-bold text-[34px] text-[#2b3674]">{text}</span>
+          <span className="mt-[5px] font-bold text-[34px] text-[#2b3674]">{text == undefined ? '' : text}</span>
         </div>
         <div className="absolute right-[25px] w-[350px] h-[50px] bg-[#fff] shadow-md rounded-[30px]"></div>
       </header>

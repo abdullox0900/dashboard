@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { AndroidOutlined, AppleOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
+
 import AddStudent from "../../components/Student/AddStudent";
 import StudentList from "../../components/Student/StudentList";
 import useHeaderTitle from "../../hooks/useHeaderTitle";
@@ -13,7 +14,6 @@ function Students() {
   setText('Student')
 
   const onChange = (key) => {
-    console.log(key);
   };
 
   const items = [

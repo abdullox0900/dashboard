@@ -181,7 +181,7 @@ function AddStudent() {
           </Button>
         </form>
       </div>
-      <div className="content-tabs relative w-[50%] h-[800px] mt-[20px] p-[20px] bg-[#fff] rounded-[16px]">
+      <div className="content-tabs relative w-[50%] h-[800px] mt-[20px] p-[20px] bg-[#fff] overflow-scroll rounded-[16px]">
         <ul className="flex flex-col gap-[20px]">
           {
           isLoading ? (
