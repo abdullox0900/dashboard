@@ -136,6 +136,7 @@ export default function AddProject() {
 		}
 	}
 
+	// =============| UpdateInput |=============
 	const onUpdateProject = id => {
 		axios(`${URL_API}/${id}`).then(res => {
 			if (res) {
@@ -151,6 +152,7 @@ export default function AddProject() {
 		})
 	}
 
+	// =============| Update |=============
 	const onUpdate = () => {
 		setLoading(true)
 		axios

@@ -2,6 +2,7 @@ import { Tabs } from 'antd'
 import useHeaderTitle from '../../hooks/useHeaderTitle'
 
 import AddProject from '../../components/web_blocks/add_project'
+import AddBlog from '../../components/web_blocks/add_blog'
 
 function Website() {
 	const { setText } = useHeaderTitle()
@@ -19,7 +20,7 @@ function Website() {
 		{
 			key: '2',
 			label: 'Blog',
-			children: 'Page - 1',
+			children: <AddBlog />,
 		},
 	]
 
