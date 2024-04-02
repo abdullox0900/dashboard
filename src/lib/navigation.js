@@ -1,7 +1,7 @@
 export const DASHBOARD_SIDEBAR_LINKS = [
     {
         name: 'Dashboard',
-        path: '/dashboard',
+        path: '/',
         icon: 'home-outline'
     },
     // {
@@ -19,11 +19,11 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     //     path: '/abdullokh',
     //     icon: 'person-outline'
     // },
-    // {
-    //     name: 'Dev',
-    //     path: '/dev',
-    //     icon: 'terminal-outline'
-    // },
+    {
+        name: 'Dev',
+        path: '/dev',
+        icon: 'terminal-outline'
+    },
     // {
     //     name: 'English',
     //     path: '/english',
