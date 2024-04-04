@@ -21,6 +21,7 @@ function App() {
 					<Route path='abdullokh' element={<Abdullokh />}></Route>
 					<Route path='data' element={<Data />} />
 					<Route path='dev' element={<Dev />} />
+
 					<Route path='english' element={<English />} />
 					<Route path='website' element={<Website />} />
 				</Route>
