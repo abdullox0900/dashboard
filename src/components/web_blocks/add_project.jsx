@@ -289,7 +289,7 @@ export default function AddProject() {
 								<Image
 									className='w-[100px] h-[60px] rounded-[10px] object-cover'
 									src={
-										item?.img.length == 0
+										item?.img?.length == 0
 											? 'https://aestheticmedicalpractitioner.com.au/wp-content/uploads/2021/06/no-image.jpg'
 											: item?.img
 									}

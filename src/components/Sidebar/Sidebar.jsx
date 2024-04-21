@@ -5,7 +5,9 @@ function Sidebar() {
 	return (
 		<>
 			<nav className='w-[250px] h-lvh p-[30px]'>
-				<div className='w-[200px] h-[60px] rounded-[10px] bg-[#fff] mb-[20px] shadow-md'></div>
+				<div className='flex items-center justify-center text-[22px] w-[200px] h-[60px] rounded-[10px] bg-[#fff] mb-[20px] shadow-md'>
+					👾 MyPanel
+				</div>
 				<ul className='flex flex-col gap-[15px]'>
 					{DASHBOARD_SIDEBAR_LINKS.map((content, index) => (
 						<SidebarLink key={index} item={content} />
