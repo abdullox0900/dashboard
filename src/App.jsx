@@ -10,6 +10,7 @@ import Data from './pages/Data/Data'
 import Dev from './pages/Dev/Dev'
 import English from './pages/English/English'
 import Website from './pages/Website/Website'
+import Login from './pages/Login/Login'
 
 function App() {
 	return (
@@ -25,6 +26,7 @@ function App() {
 					<Route path='english' element={<English />} />
 					<Route path='website' element={<Website />} />
 				</Route>
+				<Route path='login' element={<Login />} />
 			</Routes>
 		</>
 	)
