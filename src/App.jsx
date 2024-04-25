@@ -1,5 +1,5 @@
 import './App.css'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom'
 
 import Layout from './components/Layout/Layout'
 import Dashboard from './pages/Dashboard/Dashboard'
@@ -13,6 +13,14 @@ import Website from './pages/Website/Website'
 import Login from './pages/Login/Login'
 
 function App() {
+	const navigate = useNavigate()
+
+	if (localStorage.getItem('token') == 'nimagap') {
+		navigate('/')
+	} else {
+		navigate('/login')
+	}
+
 	return (
 		<>
 			<Routes>
