@@ -11,15 +11,18 @@ import Dev from './pages/Dev/Dev'
 import English from './pages/English/English'
 import Website from './pages/Website/Website'
 import Login from './pages/Login/Login'
+import { useEffect } from 'react'
 
 function App() {
 	const navigate = useNavigate()
 
-	if (localStorage.getItem('token') == 'nimagap') {
-		navigate('/')
-	} else {
-		navigate('/login')
-	}
+	useEffect(() => {
+		if (localStorage.getItem('token') == 'nimagap') {
+			navigate('/')
+		} else {
+			navigate('/login')
+		}
+	}, [])
 
 	return (
 		<>

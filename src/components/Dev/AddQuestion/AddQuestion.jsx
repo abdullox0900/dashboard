@@ -1,6 +1,6 @@
-import { Button, Input, Select, Form, Space } from 'antd'
+import { Button, Form, Input, Select } from 'antd'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Editor } from 'primereact/editor'
 
@@ -63,7 +63,7 @@ function AddQuestion() {
 
 	return (
 		<>
-			<div className='flex flex-col gap-[20px] w-[600px] min-h-[300px] p-[20px] bg-white rounded-[16px] shadow-md'>
+			<div className='flex flex-col gap-[20px] w-[600px] min-h-[300px] p-[20px] bg-white rounded-[16px] border border-slate-300 max-[1050px]:w-full'>
 				<Input
 					placeholder='Question Name'
 					size='large'

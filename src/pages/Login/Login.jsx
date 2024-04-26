@@ -19,8 +19,10 @@ function Login() {
 		}
 	}
 
+	document.body.style.overflow = 'hidden'
+
 	return (
-		<div className='flex items-center justify-center h-[100vh]'>
+		<div className='flex items-center justify-center h-[100vh] overflow-hidden'>
 			<div className='flex flex-col gap-[20px] items-center w-[500px] p-[30px] bg-white rounded-[10px]'>
 				<img
 					className='mb-[10px]'

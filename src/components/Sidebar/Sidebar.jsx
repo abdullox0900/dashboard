@@ -4,11 +4,11 @@ import { DASHBOARD_SIDEBAR_LINKS } from '../../lib/navigation'
 function Sidebar() {
 	return (
 		<>
-			<nav className='w-[250px] h-lvh p-[30px]'>
-				<div className='flex items-center justify-center text-[22px] w-[200px] h-[60px] rounded-[10px] bg-[#fff] mb-[20px] shadow-md'>
+			<nav className='w-[250px] h-lvh p-[30px] max-[768px]:h-[80px] max-[768px]:flex max-[768px]:p-[10px] max-[768px]:w-full'>
+				<div className='flex items-center justify-center text-[22px] max-[768px]:hidden w-[200px] h-[60px] rounded-[10px] bg-[#fff] mb-[20px] shadow-md'>
 					👾 MyPanel
 				</div>
-				<ul className='flex flex-col gap-[15px]'>
+				<ul className='flex flex-col gap-[15px] max-[768px]:flex-row max-[768px]:overflow-x-scroll '>
 					{DASHBOARD_SIDEBAR_LINKS.map((content, index) => (
 						<SidebarLink key={index} item={content} />
 					))}

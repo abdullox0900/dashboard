@@ -31,7 +31,7 @@ function Header() {
 						]}
 					/>
 
-					<span className='mt-[5px] font-bold text-[34px] text-[#2b3674]'>
+					<span className='mt-[5px] font-bold text-[34px] text-[#2b3674] max-[768px]:text-[24px]'>
 						{text == undefined ? '' : text}
 					</span>
 				</div>

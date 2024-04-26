@@ -1,5 +1,5 @@
 // Import React Hooks
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // Import Packages
 import { Button, Image, Input, List, Spin, message } from 'antd'
@@ -15,6 +15,8 @@ import { useProjectData } from '../../api/useProject'
 // Firebase
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { storage } from '../../config/firebase'
+import useLength from '../../hooks/useLength'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 export default function AddProject() {
 	// API
@@ -28,6 +30,8 @@ export default function AddProject() {
 	const [proLinkTwo, setProLinkTwo] = useState('')
 	const [proType, setProType] = useState('')
 	const [proDescription, setProDescription] = useState('')
+
+	const { setLength } = useLength()
 
 	const [projectId, setProjectId] = useState()
 
@@ -45,6 +49,13 @@ export default function AddProject() {
 
 	// Fetching projects
 	const { data, refetch } = useProjectData()
+
+	const isRowBased = useMediaQuery('(max-width: 1050px)')
+
+	// Length context
+	useEffect(() => {
+		setLength(10)
+	}, [])
 
 	// =============| messages |=============
 	const success = text => {
@@ -194,13 +205,20 @@ export default function AddProject() {
 	}
 
 	return (
-		<section className='flex justify-between gap-[20px]'>
+		<section className='flex justify-between gap-[20px] max-[1050px]:flex-wrap '>
 			{contextHolder}
 			<Spin className='spin-new-class' spinning={loading} fullscreen />
 
 			{/* =============| Add projects form |============= */}
-			<div style={{ position: 'sticky', top: '0px' }}>
-				<form className='flex flex-col gap-5 w-[400px] sticky top-0'>
+			<div
+				className='max-[1050px]:static max-[1050px]:w-full'
+				style={
+					isRowBased
+						? { position: 'static' }
+						: { position: 'sticky', top: '0px' }
+				}
+			>
+				<form className='flex flex-col gap-5 w-[400px] sticky top-0 max-[1050px]:w-full'>
 					<label
 						htmlFor='upload'
 						className='relative cursor-pointer bg-white border-[#d9d9d9] border-[1px] rounded-md p-[8px] hover:border-green-500'

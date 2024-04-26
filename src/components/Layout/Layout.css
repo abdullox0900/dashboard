@@ -1,0 +1,10 @@
+.wrap {
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max:768px) {
+    .wrap {
+        flex-direction: column-reverse;
+    }
+}

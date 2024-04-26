@@ -1,13 +1,12 @@
-import { createContext, useState } from "react";
+import { createContext, useState } from 'react'
 
 const Context = createContext()
 
-function TextProvider({children}) {
+function TextProvider({ children }) {
+	const [text, setText] = useState('')
 
-    const [text, setText] = useState('');
-
-    return (
-        <Context.Provider value={{text, setText}}>{children}</Context.Provider>
-    )
+	return (
+		<Context.Provider value={{ text, setText }}>{children}</Context.Provider>
+	)
 }
-export { Context, TextProvider}
+export { Context, TextProvider }
