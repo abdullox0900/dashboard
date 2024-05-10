@@ -1,44 +1,62 @@
-import { Button, Form, Input, Select } from 'antd'
-import axios from 'axios'
-import { useState } from 'react'
-
-import { Editor } from 'primereact/editor'
-
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { Button, Input, Select, message } from 'antd'
+import { addDoc, collection } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { IoIosAddCircleOutline } from 'react-icons/io'
+import { MdDeleteOutline } from 'react-icons/md'
+import { db } from '../../../config/firebase'
 
 function AddQuestion() {
-	const API_URL = 'https://6537a88fbb226bb85dd39095.mockapi.io/easydev/list'
+	// Loading
+	const [isLoading, setIsLoading] = useState(false)
 
+	// Inputs States
 	const [qName, setQName] = useState('')
-	const [qLanguage, setQLanguage] = useState('')
-	const [qType, setQType] = useState('')
+	const [qLanguage, setQLanguage] = useState()
+	const [qType, setQType] = useState()
 	const [qAnswer, setQAnswer] = useState('')
 
+	// Dynamic inputs state - 1
+	const [inputsWeb, setInputsWeb] = useState([{ name: '', link: '' }])
+
+	// Dynamic inputs state - 2
+	const [inputsYuoTube, setInputsYuoTube] = useState([
+		{ name: '', link: '', author_name: '' },
+	])
+
+	// Ant Message
+	const [messageApi, contextHolder] = message.useMessage()
+
+	const key = 'updatable'
+
+	const error = () => {
+		messageApi.open({
+			type: 'error',
+			content: 'This is an error message',
+		})
+	}
+	const warning = () => {
+		messageApi.open({
+			type: 'warning',
+			content: 'This is a warning message',
+		})
+	}
+
+	// TextArea
+	const { TextArea } = Input
+
+	// Function cleat states
 	const clearData = () => {
 		setQName('')
 		setQAnswer('')
-		setQType('')
-		setQLanguage('')
+		setQType()
+		setQLanguage()
+		setInputsWeb([{ name: '', link: '' }])
+		setInputsYuoTube([{ name: '', link: '', author_name: '' }])
 	}
 
-	const submitData = () => {
-		const data = {
-			q_name: qName,
-			q_answer: qAnswer,
-			q_type: qType,
-			q_language: qLanguage,
-		}
+	//  ============== Dynamic Input-1 ===============  //
 
-		if (qName !== '' && qType !== '' && qLanguage !== '' && qAnswer !== '') {
-			axios.post(API_URL, data).then(res => {
-				clearData()
-			})
-		} else {
-			console.log('Malumot yozing')
-		}
-	}
-
-	const { TextArea } = Input
+	// Functions Handle Select
 	const handleChange1 = value => {
 		setQLanguage(value)
 	}
@@ -46,24 +64,88 @@ function AddQuestion() {
 		setQType(value)
 	}
 
-	const onFinish = values => {
-		console.log('Received values of form:', values)
+	// Yangi input qo'shish
+	const handleAddInput = () => {
+		setInputsWeb([...inputsWeb, { name: '', link: '' }])
 	}
 
-	const [link, setLink] = useState([''])
-	const [text, setText] = useState('')
+	// Input qiymatlarini o'zgartirish
+	const handleInputChange = (index, name, link) => {
+		const newInputs = [...inputsWeb]
+		newInputs[index] = { name, link }
+		setInputsWeb(newInputs)
+	}
 
-	console.log(text)
+	// Inputni o'chirish
+	const handleRemoveInput = index => {
+		const newInputs = [...inputsWeb]
+		newInputs.splice(index, 1)
+		setInputsWeb(newInputs)
+	}
 
-	function handleChange(i, event) {
-		const values = [...link]
-		values[i] = event.target.value
-		setLink(values)
+	//  ============== Dynamic Input-2 ===============  //
+
+	// Yangi input qo'shish
+	const handleAddInput2 = () => {
+		setInputsYuoTube([
+			...inputsYuoTube,
+			{ name: '', link: '', author_name: '' },
+		])
+	}
+
+	// Input qiymatlarini o'zgartirish
+	const handleInputChange2 = (index, name, link, author_name) => {
+		const newInputs = [...inputsYuoTube]
+		newInputs[index] = { name, link, author_name }
+		setInputsYuoTube(newInputs)
+	}
+
+	// Inputni o'chirish
+	const handleRemoveInput2 = index => {
+		const newInputs = [...inputsYuoTube]
+		newInputs.splice(index, 1)
+		setInputsYuoTube(newInputs)
+	}
+
+	// All state data
+	const data = {
+		title: qName,
+		description: qAnswer,
+		level: qType,
+		lang: qLanguage,
+		web: inputsWeb,
+		youtube: inputsYuoTube,
+	}
+
+	// Post data for Firebase
+	const sendDataToFirestore = async () => {
+		try {
+			setIsLoading(true)
+			messageApi.open({
+				key,
+				type: 'loading',
+				content: 'Loading...',
+			})
+			const res = await addDoc(collection(db, 'javascript'), data)
+			console.log("Ma'lumot yuborildi:", res)
+			clearData()
+			setIsLoading(false)
+			messageApi.open({
+				key,
+				type: 'success',
+				content: 'Malumot yozildi',
+				duration: 2,
+			})
+		} catch (error) {
+			error()
+			console.error("Ma'lumotni yuborishda xato:", error)
+		}
 	}
 
 	return (
 		<>
-			<div className='flex flex-col gap-[20px] w-[600px] min-h-[300px] p-[20px] bg-white rounded-[16px] border border-slate-300 max-[1050px]:w-full'>
+			{contextHolder}
+			<div className='flex flex-col gap-[20px] w-[600px] min-h-[300px] p-[20px] bg-white rounded-md border-[#d9d9d9] border-[1px] max-[1050px]:w-full'>
 				<Input
 					placeholder='Question Name'
 					size='large'
@@ -74,8 +156,8 @@ function AddQuestion() {
 					style={{
 						width: '100%',
 					}}
-					value={qLanguage}
 					placeholder='Language'
+					value={qLanguage}
 					size='large'
 					onChange={handleChange1}
 					options={[
@@ -90,14 +172,13 @@ function AddQuestion() {
 					]}
 				/>
 				<Select
-					defaultValue={''}
-					placeholder='Level'
 					style={{
 						width: '100%',
 					}}
 					value={qType}
 					size='large'
 					onChange={handleChange2}
+					placeholder='Level'
 					options={[
 						{
 							value: 'beginner',
@@ -113,84 +194,118 @@ function AddQuestion() {
 						},
 					]}
 				/>
-				<Form
-					name='dynamic_form_nest_item'
-					onFinish={onFinish}
-					style={{ width: '100%' }}
-					autoComplete='off'
-				>
-					<Form.List name='users'>
-						{(fields, { add, remove }) => (
-							<>
-								{fields.map(({ key, name, ...restField }) => (
-									<div
-										className='flex items-center h-[40px] mb-[20px] gap-[10px]'
-										key={key}
-									>
-										<Input
-											placeholder='YuoTube Link'
-											style={{ width: '100%', height: '40px' }}
-											size='large'
-										/>
-										<MinusCircleOutlined onClick={() => remove(name)} />
-									</div>
-								))}
-								<Button
-									type='dashed'
-									onClick={() => add()}
-									size='large'
-									block
-									icon={<PlusOutlined />}
-								>
-									Add YouTube Link
-								</Button>
-							</>
-						)}
-					</Form.List>
-				</Form>
 
-				<Form
-					name='dynamic_form_nest_item'
-					onFinish={onFinish}
-					style={{ width: '100%' }}
-					autoComplete='off'
-				>
-					<Form.List name='users'>
-						{(fields, { add, remove }) => (
-							<>
-								{fields.map(({ key, name, ...restField }) => (
-									<div
-										className='flex items-center h-[40px] mb-[20px] gap-[10px]'
-										key={key}
-									>
-										<Input
-											placeholder='YuoTube Name'
-											style={{ width: '100%', height: '40px' }}
-											size='large'
-											onChange={e => handleChange(key, e)}
-										/>
-										<Input
-											placeholder='YuoTube Link'
-											style={{ width: '100%', height: '40px' }}
-											size='large'
-											onChange={e => handleChange(key, e)}
-										/>
-										<MinusCircleOutlined onClick={() => remove(name)} />
-									</div>
-								))}
-								<Button
-									type='dashed'
-									onClick={() => add()}
+				{/* Dynamic Inputs */}
+				<div className='flex flex-col gap-[20px]'>
+					{inputsWeb.map((input, index) => (
+						<div key={index} className='flex items-center justify-between'>
+							<div className='flex flex-col gap-[20px] w-[90%]'>
+								<Input
 									size='large'
-									block
-									icon={<PlusOutlined />}
-								>
-									Add Web Link
-								</Button>
-							</>
-						)}
-					</Form.List>
-				</Form>
+									placeholder='Name'
+									value={input.name}
+									onChange={e =>
+										handleInputChange(index, e.target.value, input.link)
+									}
+								/>
+								<Input
+									size='large'
+									placeholder='Link'
+									value={input.link}
+									onChange={e =>
+										handleInputChange(index, input.name, e.target.value)
+									}
+								/>
+							</div>
+							{/* O'chirish tugmasi */}
+							<button
+								className='flex items-center justify-center w-[30px] h-[30px]'
+								onClick={() => handleRemoveInput(index)}
+								size='large'
+							>
+								<MdDeleteOutline className='text-red-500 text-[18px]' />
+							</button>
+						</div>
+					))}
+
+					{/* Yangi input qo'shish tugmasi */}
+					<Button
+						className='flex items-center justify-center'
+						onClick={handleAddInput}
+						size='large'
+						type='dashed'
+					>
+						<IoIosAddCircleOutline className='text-[18px] text-[#d9d9d9]' />
+					</Button>
+				</div>
+
+				<div className='flex flex-col gap-[20px]'>
+					{inputsYuoTube.map((input, index) => (
+						<div key={index} className='flex items-center justify-between'>
+							<div className='flex flex-col gap-[20px] w-[90%]'>
+								<Input
+									size='large'
+									placeholder='Name'
+									value={input.name}
+									onChange={e =>
+										handleInputChange2(
+											index,
+											e.target.value,
+											input.link,
+											input.author_name
+										)
+									}
+								/>
+								<Input
+									size='large'
+									placeholder='Link'
+									value={input.link}
+									onChange={e =>
+										handleInputChange2(
+											index,
+											input.name,
+											e.target.value,
+											input.author_name
+										)
+									}
+								/>
+								<Input
+									size='large'
+									placeholder='Author name'
+									value={input.author_name}
+									onChange={e =>
+										handleInputChange2(
+											index,
+											input.name,
+											input.link,
+											e.target.value
+										)
+									}
+								/>
+							</div>
+							{/* O'chirish tugmasi */}
+							<button
+								className='flex items-center justify-center w-[30px] h-[30px]'
+								onClick={() => handleRemoveInput2(index)}
+								size='large'
+							>
+								<MdDeleteOutline className='text-red-500 text-[18px]' />
+							</button>
+						</div>
+					))}
+
+					{/* Yangi input qo'shish tugmasi */}
+					<Button
+						className='flex items-center justify-center'
+						onClick={handleAddInput2}
+						size='large'
+						type='dashed'
+					>
+						<IoIosAddCircleOutline className='text-[18px] text-[#d9d9d9]' />
+					</Button>
+				</div>
+
+				{/* TextArea */}
 				<TextArea
 					showCount
 					maxLength={700}
@@ -203,12 +318,9 @@ function AddQuestion() {
 						resize: 'none',
 					}}
 				/>
-				<Editor
-					value={text}
-					onTextChange={e => setText(e.htmlValue)}
-					style={{ height: '320px' }}
-				/>
-				<Button onClick={submitData} size='large'>
+
+				{/* Submit Button */}
+				<Button onClick={sendDataToFirestore} size='large'>
 					Submit
 				</Button>
 			</div>

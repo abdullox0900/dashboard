@@ -1,9 +1,8 @@
 import { Tabs } from 'antd'
 
 import useHeaderTitle from '../../hooks/useHeaderTitle'
-import QuestionAndAnswers from '../../components/Dev/QuestionsAndAnswers/QuestionAndAnswers'
-import AddQuestion from '../../components/Dev/AddQuestion/AddQuestion'
 import { useEffect } from 'react'
+import Wrapper from '../../components/Dev/Wrapper/Wrapper'
 
 function Dev() {
 	const { setText } = useHeaderTitle()
@@ -17,13 +16,8 @@ function Dev() {
 	const items = [
 		{
 			key: '1',
-			label: 'Questions and Answers',
-			children: <QuestionAndAnswers />,
-		},
-		{
-			key: '2',
 			label: 'Add Questions',
-			children: <AddQuestion />,
+			children: <Wrapper />,
 		},
 	]
 

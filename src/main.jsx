@@ -9,6 +9,9 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { TextProvider } from './context/header-title.jsx'
 import { LengthProvider } from './context/length.jsx'
 
+// Demo styles, see 'Styles' section below for some notes on use.
+import 'react-accessible-accordion/dist/fancy-example.css'
+
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
