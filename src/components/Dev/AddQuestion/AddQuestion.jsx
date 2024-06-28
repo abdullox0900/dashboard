@@ -1,9 +1,10 @@
 import { Button, Input, Select, message } from 'antd'
-import { addDoc, collection } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import { useState } from 'react'
 import { IoIosAddCircleOutline } from 'react-icons/io'
 import { MdDeleteOutline } from 'react-icons/md'
-import { db } from '../../../config/firebase'
+import storage, { db } from '../../../config/firebase'
 
 function AddQuestion() {
 	// Loading
@@ -14,6 +15,11 @@ function AddQuestion() {
 	const [qLanguage, setQLanguage] = useState()
 	const [qType, setQType] = useState()
 	const [qAnswer, setQAnswer] = useState('')
+	const [possibly, setPossibly] = useState('')
+
+	const [loading, setLoading] = useState(false)
+
+	const [fileUrl, setFileUrl] = useState('')
 
 	// Dynamic inputs state - 1
 	const [inputsWeb, setInputsWeb] = useState([{ name: '', link: '' }])
@@ -48,8 +54,10 @@ function AddQuestion() {
 	const clearData = () => {
 		setQName('')
 		setQAnswer('')
+		setPossibly('')
 		setQType()
 		setQLanguage()
+		setFileUrl()
 		setInputsWeb([{ name: '', link: '' }])
 		setInputsYuoTube([{ name: '', link: '', author_name: '' }])
 	}
@@ -81,6 +89,42 @@ function AddQuestion() {
 		const newInputs = [...inputsWeb]
 		newInputs.splice(index, 1)
 		setInputsWeb(newInputs)
+	}
+
+	// =============| Upload img firebase |=============
+	const [file, setFile] = useState(null)
+	const [progress, setProgress] = useState(0)
+	const [url, setUrl] = useState('')
+
+	const handleFileChange = e => {
+		setFile(e.target.files[0])
+	}
+
+	console.log(url)
+
+	const handleUpload = () => {
+		if (!file) return
+
+		const storageRef = ref(storage, `new-file/${file.name}`)
+		const uploadTask = uploadBytesResumable(storageRef, file)
+
+		uploadTask.on(
+			'state_changed',
+			snapshot => {
+				const prog = Math.round(
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				)
+				setProgress(prog)
+			},
+			error => {
+				console.log(error)
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+					setUrl(downloadURL)
+				})
+			}
+		)
 	}
 
 	//  ============== Dynamic Input-2 ===============  //
@@ -115,6 +159,10 @@ function AddQuestion() {
 		lang: qLanguage,
 		web: inputsWeb,
 		youtube: inputsYuoTube,
+		possibly,
+		fileUrl,
+		file: url,
+		createdAt: serverTimestamp(),
 	}
 
 	// Post data for Firebase
@@ -126,7 +174,7 @@ function AddQuestion() {
 				type: 'loading',
 				content: 'Loading...',
 			})
-			const res = await addDoc(collection(db, 'javascript'), data)
+			const res = await addDoc(collection(db, qLanguage), data)
 			console.log("Ma'lumot yuborildi:", res)
 			clearData()
 			setIsLoading(false)
@@ -151,6 +199,12 @@ function AddQuestion() {
 					size='large'
 					value={qName}
 					onChange={e => setQName(e.target.value)}
+				/>
+				<Input
+					placeholder='Possibly %'
+					size='large'
+					value={possibly}
+					onChange={e => setPossibly(e.target.value)}
 				/>
 				<Select
 					style={{
@@ -318,6 +372,21 @@ function AddQuestion() {
 						resize: 'none',
 					}}
 				/>
+
+				<div>
+					<input type='file' onChange={handleFileChange} />
+					<button onClick={handleUpload}>Upload</button>
+					<hr />
+					<h3>Yuklanish jarayoni: {progress}%</h3>
+					{url && (
+						<div>
+							<h4>Yuklangan fayl URL manzili:</h4>
+							<a href={url} target='_blank' rel='noopener noreferrer'>
+								{url}
+							</a>
+						</div>
+					)}
+				</div>
 
 				{/* Submit Button */}
 				<Button onClick={sendDataToFirestore} size='large'>

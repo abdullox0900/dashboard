@@ -1,4 +1,5 @@
 // import Weather from "../../components/DashboardCom/Weather/Weather";
+import axios from 'axios'
 import { useState } from 'react'
 import { FaToolbox } from 'react-icons/fa'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -14,6 +15,41 @@ function Dashboard() {
 	const [toggle, setToggle] = useState(false)
 
 	let todosLength = JSON.parse(localStorage?.getItem('todos'))?.length
+
+	// let data = {
+	// 	url: 'https://www.instagram.com/reel/C6EJBDIIOmo/?igsh=ZmxidDJnczUwbmdw',
+	// }
+
+	// function postData() {
+	// 	axios.post('http://192.168.0.227:8000/api/instagram/', data).then(res => {
+	// 		console.log(res)
+	// 	})
+	// }
+
+	const requestOptions = {
+		method: 'GET',
+		redirect: 'follow',
+	}
+
+	function getData() {
+		fetch(
+			'http://192.168.0.227:8000/api/instagram1/?url=https://www.instagram.com/reel/C6EJBDIIOmo/?igsh=ZmxidDJnczUwbmdw',
+			requestOptions
+		)
+			.then(response => response.text())
+			.then(result => console.log(result))
+			.catch(error => console.error(error))
+	}
+
+	// function getData2() {
+	// 	var request = new Request(
+	// 		'https://instagram.ftas1-1.fna.fbcdn.net/v/t66.30100-16/10000000_319210237614128_8585364341530102690_n.mp4?_nc_ht=instagram.ftas1-1.fna.fbcdn.net&_nc_cat=108&_nc_ohc=VUpSooEKwBkQ7kNvgG-F2Hi&edm=ANTKIIoBAAAA&ccb=7-5&oh=00_AYAP3d3m8sR7RhPk3nlkpznx3_0hIhSAIo2fWSMEdE3G4A&oe=6647AA5E&_nc_sid=cf751b'
+	// 	)
+
+	// 	fetch(request).then(function (res) {
+	// 		console.log(res) // This should be the final URL
+	// 	})
+	// }
 
 	setText('Dashboard')
 
@@ -78,6 +114,8 @@ function Dashboard() {
 						</div>
 					</div>
 				</section>
+				<input className='border border-gray-400' type='text' />
+				<button onClick={getData}>Submit</button>
 			</section>
 		</>
 	)

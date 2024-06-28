@@ -1,5 +1,5 @@
-import { Input, Tag, theme } from 'antd'
-import { collection, getDocs } from 'firebase/firestore'
+import { Input, Tag } from 'antd'
+import { collection, getDocs, query } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import {
 	Accordion,
@@ -11,49 +11,18 @@ import {
 import { db } from '../../../config/firebase'
 
 function QuestionAndAnswers() {
-	const { token } = theme.useToken()
 	const [data, setData] = useState([])
 
-	const panelStyle = {
-		marginBottom: 24,
-		background: token.colorFillAlter,
-		borderRadius: token.borderRadiusLG,
-		border: 'none',
-	}
+	const colRef = collection(db, 'javascript')
 
-	const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-  `
-
-	const getItems = panelStyle => [
-		{
-			key: '1',
-			label: 'This is panel header 1',
-			children: <p>{text}</p>,
-			style: panelStyle,
-		},
-		{
-			key: '2',
-			label: 'This is panel header 2',
-			children: <p>{text}</p>,
-			style: panelStyle,
-		},
-		{
-			key: '3',
-			label: 'This is panel header 3',
-			children: <p>{text}</p>,
-			style: panelStyle,
-		},
-	]
+	const q = query()
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const querySnapshot = await getDocs(collection(db, 'javascript'))
 			const fetchedData = []
 			querySnapshot.forEach(doc => {
-				fetchedData.push(doc.data())
+				fetchedData.push({ ...doc.data(), id: doc.data.id })
 			})
 			setData(fetchedData)
 		}
@@ -84,7 +53,7 @@ function QuestionAndAnswers() {
 								>
 									{item.title}{' '}
 									{item.level == 'beginner' ? (
-										<Tag color='green'>oson</Tag>
+										<Tag color='green'>Beginner</Tag>
 									) : item.level == 'medium' ? (
 										<Tag color='orange'>Medium</Tag>
 									) : item.level == 'advance' ? (
