@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface SelectGroupProps {
   label: string;
-  options: Array<{ title: string; _id: string, _v: number }>;
+  options: { title: string; _id: string; _v: number; }[] | null;
 }
 
 const SelectGroupTwo: React.FC<SelectGroupProps> = ({ label, options }) => {
@@ -37,7 +37,7 @@ const SelectGroupTwo: React.FC<SelectGroupProps> = ({ label, options }) => {
           <option value="" disabled className="text-body dark:text-bodydark">
             Select Option
           </option>
-          {options.map((option) => (
+          {options?.map((option) => (
             <option key={option.title} value={option.title} className="text-body dark:text-bodydark">
               {option.title}
             </option>

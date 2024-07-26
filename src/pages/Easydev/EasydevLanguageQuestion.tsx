@@ -4,35 +4,65 @@ import useCRUD from "../../hooks/useCRUD"
 import useFetchData from "../../hooks/useFetchData"
 import SelectGroupTwo from "../../components/Forms/SelectGroup/SelectGroupTwo"
 import MultiSelect from "../../components/Forms/MultiSelect"
+import RichTextEditor from "../../components/RichTextEditor/CKEditorComponent"
+import CKEditorComponent from "../../components/RichTextEditor/CKEditorComponent"
 
 interface InputData {
     title: string;
     link: string;
 }
 
+type ProgrammingLangInner = {
+    _id: string
+    title: string
+    _v: number
+}[]
+
 export const EasydevLanguageQuestion = () => {
 
     const [languageName, setLanguageName] = useState<string>()
+    const [description, setDescription] = useState('');
+    const [content, setContent] = useState<string>('<p>Hello, world!</p>');
 
     const [inputs, setInputs] = useState<InputData[]>([{ title: '', link: '' }]);
+    const [inputs2, setInputs2] = useState<InputData[]>([{ title: '', link: '' }]);
+
 
     const handleChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-      const values = [...inputs];
-      values[index][event.target.name as keyof InputData] = event.target.value;
-      setInputs(values);
-    };
-  
-    const handleAddInput = () => {
-      setInputs([...inputs, { title: '', link: '' }]);
-    };
-  
-    const handleRemoveInput = (index: number) => {
-      const values = [...inputs];
-      values.splice(index, 1);
-      setInputs(values);
+        const values = [...inputs];
+        values[index][event.target.name as keyof InputData] = event.target.value;
+        setInputs(values);
     };
 
-    const { data, refetch } = useFetchData(`${'http://localhost:4000/'}programming-languages`)
+    const handleAddInput = () => {
+        setInputs([...inputs, { title: '', link: '' }]);
+    };
+
+    const handleRemoveInput = (index: number) => {
+        const values = [...inputs];
+        values.splice(index, 1);
+        setInputs(values);
+    };
+
+
+    const handleChange2 = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+        const values = [...inputs];
+        values[index][event.target.name as keyof InputData] = event.target.value;
+        setInputs2(values);
+    };
+
+    const handleAddInput2 = () => {
+        setInputs2([...inputs, { title: '', link: '' }]);
+    };
+
+    const handleRemoveInput2 = (index: number) => {
+        const values = [...inputs];
+        values.splice(index, 1);
+        setInputs2(values);
+    };
+
+
+    const { data, refetch } = useFetchData<ProgrammingLangInner>(`${'http://localhost:4000/'}programming-languages`)
     const { deleteData, postData, postLoading } = useCRUD(`${'http://localhost:4000/'}programming-languages`)
 
     async function sendData() {
@@ -62,14 +92,14 @@ export const EasydevLanguageQuestion = () => {
         }
     };
 
-    console.log(data);
+    console.log(content);
 
 
     return (
         <div>
             <Breadcrumb pageName="Form Question" />
             {/* General Loader */}
-            <div className="grid grid-cols-2 gap-[20px]">
+            <div className="grid grid-cols-1 gap-[20px]">
                 <div className="h-min rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                     <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                         <h3 className="font-medium text-black dark:text-white">
@@ -81,31 +111,20 @@ export const EasydevLanguageQuestion = () => {
                             <SelectGroupTwo label="Language" options={data} />
                         </div>
                         <div className="mb-4.5">
-                            <label className="mb-2.5 block text-black dark:text-white">
-                                Question title
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Title"
-                                value={languageName}
-                                onChange={(e) => setLanguageName(e.target.value)}
-                                required
-                                onKeyDown={handleKeyDown}
-                                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                            />
-                        </div>
-                        <div className="mb-4.5">
                             {/* <SelectGroupTwo /> */}
                         </div>
                         <div className="mb-4.5">
                             <MultiSelect id="multiSelect" />
                         </div>
+
+
+                        {/* Dynamic Inputs Start*/}
                         <div className="mb-4.5">
+                            <label className="mb-2.5 block text-black dark:text-white">
+                                Question YouTube Link
+                            </label>
                             {inputs.map((input, index) => (
                                 <div key={index} className="mb-4.5">
-                                    <label className="mb-2.5 block text-black dark:text-white">
-                                        Question title
-                                    </label>
                                     <input
                                         type="text"
                                         name="title"
@@ -138,6 +157,94 @@ export const EasydevLanguageQuestion = () => {
                             >
                                 Add Input
                             </button>
+                        </div>
+                        {/* Dynamic Inputs End */}
+
+                        {/* Dynamic Inputs 2 Start*/}
+                        <div className="mb-4.5">
+                            <label className="mb-2.5 block text-black dark:text-white">
+                                Question Web Link
+                            </label>
+                            {inputs2.map((input, index) => (
+                                <div key={index} className="mb-4.5">
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        value={input.title}
+                                        onChange={(event) => handleChange2(index, event)}
+                                        className="w-full mb-3 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                        placeholder="Title"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="link"
+                                        value={input.link}
+                                        onChange={(event) => handleChange2(index, event)}
+                                        className="w-full rounded mb-4.5 border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                                        placeholder="Link"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveInput2(index)}
+                                        className="mt-2.5 bg-red-500 text-white py-2 px-4 rounded"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={handleAddInput2}
+                                className="mt-1 bg-green-500 text-white py-2 px-4 rounded"
+                            >
+                                Add Input
+                            </button>
+                        </div>
+                        {/* Dynamic Inputs End */}
+
+
+                        {/* Question Title Start */}
+                        <div className="mb-4.5">
+                            <label className="mb-2.5 block text-black dark:text-white">
+                                Question title
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                value={languageName}
+                                onChange={(e) => setLanguageName(e.target.value)}
+                                required
+                                onKeyDown={handleKeyDown}
+                                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            />
+                        </div>
+                        {/* Question Title End */}
+
+
+                        {/* Question Description Start */}
+                        <div className="mb-6">
+                            <label className="mb-2.5 block text-black dark:text-white">
+                                Description
+                            </label>
+                            <textarea
+                                name="description"
+                                rows={6}
+                                placeholder="Type your message"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            ></textarea>
+                        </div>
+                        {/* Question Description End */}
+
+                        <div className="mb-6">
+                            <label className="mb-2.5 block text-black dark:text-white">
+                                Content
+                            </label>
+                            <CKEditorComponent
+                                value={content}
+                                onChange={setContent}
+                            />
                         </div>
                         <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90" onClick={sendData}>
                             Send
